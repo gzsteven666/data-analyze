@@ -1,0 +1,29 @@
+{
+  "name": "data-analyze-skill",
+  "version": "1.1.0",
+  "description": "通用数据分析 + 信息图自动生成 Skill",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "python-shell": "^5.0.0",
+    "fs-extra": "^11.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.0"
+  },
+  "keywords": [
+    "data-analysis",
+    "visualization",
+    "infographic",
+    "charts",
+    "report-generation"
+  ],
+  "author": "Claude Code",
+  "license": "MIT"
+}

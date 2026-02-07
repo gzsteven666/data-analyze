@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Analyze Refined"
+  short_description: "Market-ready insights from business tables"
+  default_prompt: "Use $data-analyze-refined to analyze this table and produce market-facing insights, strategy, risks, and charts."

@@ -1,0 +1,241 @@
+{
+  "name": "data-analyze-skill",
+  "display_name": "通用数据分析信息图生成器",
+  "description": "面向任何行业的自助式数据分析与信息图制作工具，可自动完成数据体检、洞察挖掘、可视化和报告生成。",
+  "version": "1.1.0",
+  "author": "Claude Code",
+  "icon": "📊",
+  "category": "数据分析",
+  "tags": ["数据分析", "可视化", "信息图", "商业智能", "自动化报告"],
+  "capabilities": {
+    "data_analysis": {
+      "description": "通用多维数据分析能力",
+      "features": [
+        "自动数据体检与字段画像",
+        "数值与分类字段洞察",
+        "时间趋势与波动检测",
+        "高相关指标识别",
+        "行业自定义指标扩展"
+      ]
+    },
+    "visualization": {
+      "description": "专业图表生成",
+      "features": [
+        "PNG/SVG 双格式输出",
+        "中文/多语言字体自动匹配",
+        "响应式设计",
+        "交互式信息图"
+      ]
+    },
+    "report_generation": {
+      "description": "多格式报告生成",
+      "features": [
+        "HTML信息图",
+        "Word文档",
+        "Excel汇总表",
+        "高质量截图",
+        "洞察摘要 JSON"
+      ]
+    }
+  },
+  "requirements": {
+    "runtime": ["python3", "nodejs"],
+    "dependencies": {
+      "python": [
+        "pandas>=1.5.0",
+        "matplotlib>=3.7.0",
+        "seaborn>=0.12.0",
+        "openpyxl>=3.1.0",
+        "python-docx>=0.8.11",
+        "playwright>=1.40.0"
+      ],
+      "nodejs": [
+        "python-shell",
+        "fs-extra",
+        "path"
+      ]
+    }
+  },
+  "config": {
+    "enable_charts": {
+      "type": "boolean",
+      "description": "是否生成图表（默认false，仅在需要时开启）",
+      "default": false
+    },
+    "enable_screenshot": {
+      "type": "boolean",
+      "description": "是否生成截图（默认false，仅在需要时开启）",
+      "default": false
+    },
+    "charts_mode": {
+      "type": "string",
+      "description": "图表生成策略：auto(默认，只有数据有价值时生成)/on(强制生成)/off(关闭)",
+      "default": "auto",
+      "enum": ["auto", "on", "off"]
+    },
+    "core_dimension": {
+      "type": "string",
+      "description": "核心实体维度列（如医院/客户/渠道/门店/品牌等），集中度/TopN/覆盖度分析优先基于此列",
+      "default": ""
+    },
+    "report_font": {
+      "type": "string",
+      "description": "报告字体（Word 默认使用微软雅黑）",
+      "default": "微软雅黑"
+    }
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "data_file": {
+        "type": "string",
+        "description": "数据文件路径（CSV或Excel）",
+        "examples": ["data/采购数据.xlsx", "data/市场数据.csv"]
+      },
+      "sheet_name": {
+        "type": "string",
+        "description": "Excel工作表名称（可选）",
+        "examples": ["广东所有", "2023年数据"]
+      },
+      "company_name": {
+        "type": "string",
+        "description": "可选：需要重点关注的分组或对象（用于高亮对比）",
+        "default": "",
+        "examples": ["目标品牌A", "业务线-北区", "示例客户组"]
+      },
+      "output_directory": {
+        "type": "string",
+        "description": "输出目录（默认写到数据文件同级的 outputs/）",
+        "default": "",
+        "examples": ["我的分析", "季度报告", "/path/to/outputs"]
+      },
+      "time_column": {
+        "type": "string",
+        "description": "可选：用于时间序列分析的列名",
+        "examples": ["日期", "月份"]
+      },
+      "value_column": {
+        "type": "string",
+        "description": "可选：重点指标列名（默认使用首个数值列）",
+        "examples": ["销售额", "GMV", "访问量"]
+      }
+    },
+    "required": ["data_file"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "分析是否成功"
+      },
+      "message": {
+        "type": "string",
+        "description": "执行结果消息"
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "html_report": {
+            "type": "string",
+            "description": "HTML信息图文件路径"
+          },
+          "screenshot": {
+            "type": "string",
+            "description": "截图文件路径"
+          },
+          "charts": {
+            "type": "object",
+            "description": "图表文件路径（PNG/SVG）"
+          },
+          "csv_files": {
+            "type": "string",
+            "description": "CSV文件目录"
+          },
+          "excel_summary": {
+            "type": "string",
+            "description": "Excel汇总文件路径"
+          },
+          "insights": {
+            "type": "string",
+            "description": "洞察分析JSON文件路径"
+          },
+          "word_report": {
+            "type": "string",
+            "description": "Word报告文件路径"
+          },
+          "output_root": {
+            "type": "string",
+            "description": "输出根目录（默认为数据文件同级的 outputs/）"
+          }
+        }
+      },
+      "analysis_summary": {
+        "type": "object",
+        "description": "分析摘要",
+        "properties": {
+          "total_records": {
+            "type": "integer",
+            "description": "总记录数"
+          },
+          "key_metric": {
+            "type": "number",
+            "description": "核心指标（因数据而异）"
+          },
+          "highlight_dimension": {
+            "type": "string",
+            "description": "最具潜力的维度或分类"
+          },
+          "trend_direction": {
+            "type": "string",
+            "description": "时间趋势方向（上升/下降/平稳）"
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "季度销售盘点",
+      "description": "对电商平台季度销售数据进行多维分析并生成信息图",
+      "input": {
+        "data_file": "data/quarter_sales.xlsx",
+        "sheet_name": "Q4",
+        "company_name": "旗舰店A",
+        "time_column": "月份",
+        "value_column": "GMV"
+      }
+    },
+    {
+      "name": "市场活动复盘",
+      "description": "对CSV日志进行数据体检、分类占比、趋势和相关性分析",
+      "input": {
+        "data_file": "data/campaign_log.csv",
+        "company_name": "活动组-北区"
+      }
+    },
+    {
+      "name": "运营日报自动化",
+      "description": "每日生成指标概览、TopN分类和趋势截图，方便快速复盘",
+      "input": {
+        "data_file": "data/daily_metrics.xlsx",
+        "time_column": "日期"
+      }
+    }
+  ],
+  "implementation": {
+    "type": "node",
+    "entry_point": "src/index.js",
+    "main_function": "analyzeData",
+    "timeout": 300000,
+    "memory_limit": "1GB"
+  },
+  "metadata": {
+    "created_date": "2024-11-13",
+    "last_updated": "2025-01-01",
+    "based_on": "多行业数据分析实践",
+    "complexity": "高级",
+    "estimated_runtime": "2-5分钟",
+    "data_privacy": "本地处理，不上传数据"
+  }
+}
