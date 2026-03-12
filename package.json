@@ -1,0 +1,29 @@
+{
+  "name": "data-analyze-refined",
+  "version": "1.4.0",
+  "description": "将 Excel/CSV 业务数据转成市场与管理层可用的洞察分析包。",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "python -m unittest discover -s tests -v",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "python-shell": "^5.0.0",
+    "fs-extra": "^11.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "keywords": [
+    "data-analysis",
+    "business-insights",
+    "market-analysis",
+    "excel",
+    "csv",
+    "report-generation"
+  ],
+  "author": "Claude Code",
+  "license": "MIT"
+}

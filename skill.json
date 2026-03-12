@@ -1,0 +1,186 @@
+{
+  "name": "data-analyze-refined",
+  "display_name": "业务数据市场洞察分析包",
+  "description": "面向 Excel/CSV 业务表格的数据分析技能，自动判断核心维度与指标，输出市场与管理层可用的洞察、图表、Excel 汇总、HTML 信息图和 Word 报告。",
+  "version": "1.4.0",
+  "author": "Claude Code",
+  "icon": "📊",
+  "category": "数据分析",
+  "tags": [
+    "数据分析",
+    "商业洞察",
+    "市场分析",
+    "Excel",
+    "CSV",
+    "自动化报告"
+  ],
+  "capabilities": {
+    "analysis": {
+      "description": "自动识别维度、指标与分析重点",
+      "features": [
+        "自动选择核心维度和核心指标",
+        "市场份额、集中度、覆盖与机会分析",
+        "字段缺失时自动降级到可替代洞察",
+        "结论、策略、风险一体化输出"
+      ]
+    },
+    "deliverables": {
+      "description": "多格式交付物生成",
+      "features": [
+        "CSV 明细表",
+        "Excel 汇总工作簿",
+        "PNG/SVG 图表",
+        "HTML 信息图",
+        "Word 分析报告"
+      ]
+    }
+  },
+  "requirements": {
+    "runtime": [
+      "python",
+      "nodejs"
+    ],
+    "dependencies": {
+      "python": [
+        "pandas>=1.5.0",
+        "numpy>=1.24.0",
+        "matplotlib>=3.7.0",
+        "seaborn>=0.12.0",
+        "plotly>=5.15.0",
+        "openpyxl>=3.1.0",
+        "python-docx>=0.8.11",
+        "Pillow>=10.0.0",
+        "jinja2>=3.1.0"
+      ],
+      "optional_python": [
+        "playwright>=1.40.0"
+      ],
+      "nodejs": [
+        "python-shell",
+        "fs-extra",
+        "path"
+      ]
+    }
+  },
+  "config": {
+    "charts_mode": {
+      "type": "string",
+      "description": "图表生成策略：auto/on/off",
+      "default": "auto",
+      "enum": [
+        "auto",
+        "on",
+        "off"
+      ]
+    },
+    "core_dimension": {
+      "type": "string",
+      "description": "核心实体维度列名；不传则自动推断",
+      "default": ""
+    },
+    "value_column": {
+      "type": "string",
+      "description": "核心指标列名；不传则自动推断",
+      "default": ""
+    },
+    "target_brand": {
+      "type": "string",
+      "description": "目标品牌/对象名称，用于白区与机会优先级分析",
+      "default": ""
+    },
+    "enable_screenshot": {
+      "type": "boolean",
+      "description": "是否生成 HTML 截图，默认关闭",
+      "default": false
+    }
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "data_file": {
+        "type": "string",
+        "description": "Excel 或 CSV 文件路径"
+      },
+      "sheet_name": {
+        "type": "string",
+        "description": "Excel 工作表名称，可选"
+      },
+      "company_name": {
+        "type": "string",
+        "description": "用于高亮或叙述的目标对象名称，可选"
+      },
+      "target_brand": {
+        "type": "string",
+        "description": "用于白区/机会分析的目标品牌或对象名称，可选"
+      },
+      "value_column": {
+        "type": "string",
+        "description": "核心指标列名，可选"
+      },
+      "core_dimension": {
+        "type": "string",
+        "description": "核心维度列名，可选"
+      },
+      "output_directory": {
+        "type": "string",
+        "description": "输出目录，默认写到数据文件同级 outputs/"
+      }
+    },
+    "required": [
+      "data_file"
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "description": "分析是否成功"
+      },
+      "message": {
+        "type": "string",
+        "description": "执行结果说明"
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "output_root": {
+            "type": "string",
+            "description": "输出根目录"
+          },
+          "excel_summary": {
+            "type": "string",
+            "description": "Excel 汇总文件路径"
+          },
+          "word_report": {
+            "type": "string",
+            "description": "Word 报告路径"
+          },
+          "html_report": {
+            "type": "string",
+            "description": "HTML 信息图路径"
+          },
+          "csv_files": {
+            "type": "string",
+            "description": "CSV 目录路径"
+          }
+        }
+      }
+    }
+  },
+  "implementation": {
+    "type": "node",
+    "entry_point": "src/index.js",
+    "main_function": "analyzeData",
+    "timeout": 300000,
+    "memory_limit": "1GB"
+  },
+  "metadata": {
+    "created_date": "2024-11-13",
+    "last_updated": "2026-03-12",
+    "based_on": "业务数据洞察分析实践",
+    "complexity": "高级",
+    "estimated_runtime": "2-5分钟",
+    "data_privacy": "本地处理，不上传数据"
+  }
+}
